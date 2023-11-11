@@ -15,4 +15,7 @@ public class Result {
     public static Result fail(String message){  //失败时不返回对象，返回错误的状态码
         return new Result(0,message,null);
     }
+    public static Result success(){
+        return new Result(1,"success",null);
+    }
 }

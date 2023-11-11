@@ -41,3 +41,15 @@ py:
   host: 127.0.0.1
   port: 8081
   text_request_method: text
+
+#发送邮件相关配置
+sender:
+  email: m13138873239@163.com
+  password: LVYXCRPWXKYJDTZS
+mybatis:
+  mapper-locations: classpath:mapper/**
+
+#jedis配置
+jedis:
+  host: 127.0.0.1
+  port: 6379
