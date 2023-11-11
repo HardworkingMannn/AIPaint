@@ -53,3 +53,9 @@ mybatis:
 jedis:
   host: 127.0.0.1
   port: 6379
+
+#jwt相关配置
+jwt:
+  secret: AbbeyRoad
+  issuer: zhuang
+  existHour: 2  #可以设置成永不过期的token

@@ -1,6 +1,9 @@
 package com.example.aipaint.controller;
 
+import com.example.aipaint.entity.User;
 import com.example.aipaint.exception.*;
+import com.example.aipaint.pojo.LoginDTO;
+import com.example.aipaint.pojo.ModifyPasswordDTO;
 import com.example.aipaint.pojo.RegisterDTO;
 import com.example.aipaint.pojo.Result;
 import com.example.aipaint.service.LoginService;
@@ -15,12 +18,13 @@ import javax.mail.MessagingException;
 @RestController
 @Tag(name="登录接口")
 @Slf4j
+@RequestMapping("/login")
 public class LoginController {
     @Autowired
     private LoginService loginService;
     @GetMapping("/sendCode")
     @Operation(summary = "获取验证码")
-    public Result sendCode(String account){//可以为手机号也可以是邮箱
+    public Result sendCode(String account){//可以为手机号也可以是邮箱，注册时使用，或者找回密码时使用
         log.info("{}获取验证码",account);
         try {
             loginService.sendCode(account);
@@ -47,4 +51,43 @@ public class LoginController {
         }
         return Result.success();
     }
+    @PostMapping("/modifyPassword")
+    @Operation(summary = "修改密码")
+    public Result modifyPassword(@RequestBody ModifyPasswordDTO modifyPasswordDTO){
+        try {
+            loginService.modifyPassword(modifyPasswordDTO);
+        }catch(PasswordNotRightException e){
+            return Result.fail("密码错误");
+        }
+        return Result.success();
+    }
+    @GetMapping("/findPassword")
+    @Operation(summary = "找回密码")
+    public Result findPassword(String username,Integer code){//找回密码
+        try{
+            String password = loginService.findPassword(username, code);
+            return Result.success(password);
+        }catch(CodeNotExistException e){
+            return Result.fail("验证码不存在");
+        }catch(CodeNotPassException e){
+            return Result.fail("验证码不通过");
+        }catch(WrongUsernameException e){
+            return Result.fail("邮箱或手机号错误");
+        }
+    }
+    @PostMapping
+    @Operation(summary = "登录")
+    public Result login(@RequestBody LoginDTO loginDTO){
+        try {
+            User user = loginService.checkLogin(loginDTO);
+            String token = loginService.generateToken(user.getId());
+            return Result.success(token);
+        }catch(WrongUsernameException e){
+            return Result.fail("邮箱或手机号错误");
+        }catch(PasswordNotRightException e){
+            return Result.fail("密码错误");
+        }
+    }
+
+
 }

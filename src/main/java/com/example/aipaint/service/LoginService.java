@@ -1,12 +1,17 @@
 package com.example.aipaint.service;
 
 import com.example.aipaint.constant.LoginConst;
+import com.example.aipaint.entity.User;
 import com.example.aipaint.exception.*;
 import com.example.aipaint.mapper.LoginMapper;
 import com.example.aipaint.mapper.UserMapper;
+import com.example.aipaint.pojo.LoginDTO;
+import com.example.aipaint.pojo.ModifyPasswordDTO;
 import com.example.aipaint.pojo.RegisterDTO;
 import com.example.aipaint.pojo.Result;
 import com.example.aipaint.utils.EmailSender;
+import com.example.aipaint.utils.JwtUtil;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,6 +37,10 @@ public class LoginService {
     private EmailSender emailSender;
     @Autowired
     private LoginMapper loginMapper;
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private HttpSession session;
     public void sendCode(String account) throws MessagingException {
         int code=generateCode();   //还得存储在redis中
         if(checkEmail(account)){
@@ -88,5 +97,42 @@ public class LoginService {
             throw new CodeNotExistException();
         }
         return code.toString().equals(s);
+    }
+    public void modifyPassword(ModifyPasswordDTO modifyPasswordDTO){//修改密码
+        String username = modifyPasswordDTO.getUsername();
+        if(loginMapper.checkPassword(username,modifyPasswordDTO.getOldPassword())==null){
+            log.error("密码错误");
+            throw new PasswordNotRightException();
+        }
+        log.info("{}修改密码",username);
+        loginMapper.setPassword(username,modifyPasswordDTO.getNewPassword());
+    }
+    public String findPassword(String username,Integer code){
+        boolean b = verifyCode(username, code);
+        if(!b){
+            log.info("{}的验证码{}校验不通过",username,code);
+            throw new CodeNotPassException();
+        }
+        if(loginMapper.userExist(username)==null){
+            log.error("{}错误邮箱或手机号",username);
+            throw new WrongUsernameException();
+        }
+        return loginMapper.findPassword(username);
+    }
+    public User checkLogin(LoginDTO loginDTO){
+        String username = loginDTO.getUsername();
+        if(loginMapper.userExist(username)==null){
+            log.error("{}错误邮箱或手机号",username);
+            throw new WrongUsernameException();
+        }
+        User user = loginMapper.checkPassword(username, loginDTO.getPassword());
+        if(user ==null){
+            throw new PasswordNotRightException();
+        }
+        return user;
+    }
+    public String generateToken(Integer id){
+        session.setAttribute("userId",id);   //设置session
+        return jwtUtil.generateToken(id);
     }
 }

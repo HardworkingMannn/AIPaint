@@ -4,7 +4,37 @@
     <insert id="register">
         insert into user(username,password) values(#{username},#{password})
     </insert>
-    <select id="userExist">
+    <select id="userExist" resultType="com.example.aipaint.entity.User">
         select * from user where username=#{username}
     </select>
+    <select id="checkPassword" resultType="com.example.aipaint.entity.User">
+        select * from user
+            <where>
+                <if test="username!=null and username!=''">
+                    and username=#{username}
+                </if>
+                <if test="password!=null and password!=''">
+                    and password=#{password}
+                </if>
+            </where>
+    </select>
+    <select id="findPassword" resultType="java.lang.String">
+        select password from user
+        <where>
+            <if test="username!=null and username!=''">
+                and username=#{username}
+            </if>
+        </where>
+    </select>
+    <update id="setPassword">
+        update user
+        <set>
+            password=#{newPassword}
+        </set>
+        <where>
+            <if test="username!=null and username!=''">
+                username=#{username}
+            </if>
+        </where>
+    </update>
 </mapper>
