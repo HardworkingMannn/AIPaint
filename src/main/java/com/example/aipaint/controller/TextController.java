@@ -1,11 +1,15 @@
 package com.example.aipaint.controller;
 
+import com.example.aipaint.exception.DoubleNotExistException;
+import com.example.aipaint.exception.DoubleNotInRangeException;
 import com.example.aipaint.exception.KeywordTypeException;
 import com.example.aipaint.pojo.KeywordDTO;
 import com.example.aipaint.pojo.Result;
 import com.example.aipaint.service.RemoteService;
 import com.example.aipaint.service.Services;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.jdbc.Null;
@@ -56,6 +60,11 @@ public class TextController {
 
     @PostMapping("/keywordToPic")
     @Operation(summary = "关键词换图片")
+    @Parameters({
+            @Parameter(name="type",description = "类型，分为none（无权重值）,norm(普通类型，带权重值)，mix（混合类型），gradient（渐变类型），turn（交换类型），各个类型的含义参考群里的文档"),
+            @Parameter(name="keywords",description = "可能会有多个关键词，也可能只有一个，比如none和norm，只会有一个，gradient会有两个，mix和turn可以有多个"),
+            @Parameter(name="weight",description = "在norm类型下代表权重，gradient类型下代表比例（0-1），前多少比例是什么，后多少比例转换成什么")
+    })
     public Result keywordToPic(@RequestBody List<KeywordDTO> keywordDTOs){
         log.info("调用keywordToPic接口："+keywordDTOs.toString());
         String format=null;
@@ -65,6 +74,10 @@ public class TextController {
             return Result.fail(e.getMessage());
         }  catch(NullPointerException e){
             return Result.fail(e.getMessage());
+        }catch(DoubleNotExistException e){
+            return Result.fail("数值必须存在");
+        }catch(DoubleNotInRangeException e){
+            return Result.fail("数值必须在0-1之间");
         }
         log.info("格式化关键词完成:{}",format);
         String link=null;

@@ -5,6 +5,8 @@ import com.example.aipaint.exception.OverRecordSizeException;
 import com.example.aipaint.pojo.Result;
 import com.example.aipaint.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,10 @@ public class RecordController {
      */
     @GetMapping("/getRecord")
     @Operation(summary = "根据分页,获取历史记录")
+    @Parameters({
+            @Parameter(name="pageNum",description = "第几页，从1开始"),
+            @Parameter(name="pageSize",description = "页面大小")
+    })
     public Result getRecord(Integer pageNum,Integer pageSize){
         try {
             log.info("分页查找记录，页数:{},页面大小:{}",pageNum,pageSize);
@@ -40,6 +46,7 @@ public class RecordController {
         }
     }
     @GetMapping("/getTotal")
+    @Operation(summary="获取记录的数量")
     public Result getTotal(){
         log.info("查找记录的接口被调用");
         return Result.success(recordService.getTotal());

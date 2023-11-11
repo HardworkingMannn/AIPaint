@@ -59,6 +59,7 @@ public class Services {
             }catch(Exception e){}
             translatedList.add(translate(keyword));
         }
+        Double weight = keywordDTO.getWeight();
         switch (keywordDTO.getType()){//根据不同的类型确立如何格式化
             case KeywordType.NONE:
                 result.append(",");
@@ -66,13 +67,15 @@ public class Services {
             case KeywordType.NORM:
                 result.append(",");
                 result.append("(");
-                checkDouble(keywordDTO.getWeight());    //检验是否有赋值double
-                result.append(translatedList.get(0)+":"+keywordDTO.getWeight());
+                checkDouble(weight);    //检验是否有赋值double
+                result.append(translatedList.get(0)+":"+ weight);
                 result.append(")");
                 break;
             case KeywordType.GRADIENT:
                 result.append(",");
-                result.append(generateGradientString(translatedList,keywordDTO.getWeight()));
+                checkDouble(weight);    //检验是否有赋值double
+                check0_1(weight);    //检验是否在0-1之间
+                result.append(generateGradientString(translatedList, weight));
                 break;
             case KeywordType.MIX:
                 result.append(",");
@@ -110,6 +113,11 @@ public class Services {
     }
     public void checkDouble(Double d){
         if(d==null){
+            throw new DoubleNotExistException();
+        }
+    }
+    public void check0_1(Double d){//检验是否在0-1之间
+        if(d>=1||d<=0){
             throw new DoubleNotExistException();
         }
     }

@@ -15,17 +15,21 @@ public class UserInterceptor implements HandlerInterceptor {
     private JwtUtil jwtUtil;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        //TODO 之后再实现登录功能使用，现在先搞个userId
-        String token = request.getHeader("token");
-         Integer userId = jwtUtil.verifyToken(token);
-        if(userId!=null&&request.getSession().getAttribute("userId")==null){
-            request.getSession().setAttribute("userId",userId);
-            log.info("userId初始化完成");
+        try {
+            //TODO 之后再实现登录功能使用，现在先搞个userId
+            String token = request.getHeader("token");
+            Integer userId = jwtUtil.verifyToken(token);
+            if (userId != null && request.getSession().getAttribute("userId") == null) {
+                request.getSession().setAttribute("userId", userId);
+                log.info("userId初始化完成");
+            }
+            if (userId == null) {
+                log.error("token错误:{}", token);
+                response.getWriter().print("拒绝访问，token错误");
+            }
+            return userId != null;
+        }finally {
+            return false;
         }
-        if(userId==null){
-            log.error("token错误:{}",token);
-            response.getWriter().print("拒绝访问，token错误");
-        }
-        return userId!=null;
     }
 }
