@@ -17,11 +17,12 @@ public class InterceptorConfig implements ApplicationContextAware,WebMvcConfigur
     public void addInterceptors(InterceptorRegistry registry) {
         UserInterceptor bean = applicationContext.getBean(UserInterceptor.class);
         registry.addInterceptor(bean).addPathPatterns("/**").excludePathPatterns("/text/test","/login/**")
-                .excludePathPatterns("/doc.html","/v3/api-docs","/v3/api-docs/swagger-config","/v3/api-docs/**","/swagger-ui/index.index");
+                .excludePathPatterns("/doc.html","/v3/api-docs","/v3/api-docs/swagger-config","/v3/api-docs/**","/swagger-ui/index.index","/webjars/**");
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {//注入容器，通过容器查找到拦截器对象
         this.applicationContext=applicationContext;
     }
+
 }

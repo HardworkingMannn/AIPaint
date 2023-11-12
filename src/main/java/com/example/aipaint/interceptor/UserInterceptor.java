@@ -16,7 +16,6 @@ public class UserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {
-            //TODO 之后再实现登录功能使用，现在先搞个userId
             String token = request.getHeader("token");
             Integer userId = jwtUtil.verifyToken(token);
             if (userId != null && request.getSession().getAttribute("userId") == null) {
