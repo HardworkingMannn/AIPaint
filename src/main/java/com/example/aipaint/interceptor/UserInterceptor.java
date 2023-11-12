@@ -1,5 +1,6 @@
 package com.example.aipaint.interceptor;
 
+import com.example.aipaint.pojo.Result;
 import com.example.aipaint.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -7,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.io.IOException;
 
 @Slf4j
 @Component
@@ -24,11 +27,18 @@ public class UserInterceptor implements HandlerInterceptor {
             }
             if (userId == null) {
                 log.error("token错误:{}", token);
+                writeFailResult(response);
                 response.getWriter().print("拒绝访问，token错误");
             }
             return userId != null;
         }finally {
+            writeFailResult(response);
             return false;
         }
+    }
+    public void writeFailResult(HttpServletResponse response) throws IOException {
+        Result fail = Result.fail("拒绝访问，token错误");
+        response.setContentType("application/json");
+        response.getWriter().print(fail);
     }
 }
