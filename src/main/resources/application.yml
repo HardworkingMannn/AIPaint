@@ -35,6 +35,12 @@ spring:
     url: jdbc:mysql://localhost:3306/aipaint?serverTimezone=GMT%2b8
     username: root
     password: 1234
+  rabbitmq: #rabbitmq配置
+    host: 192.168.10.131
+    port: 5672
+    username: itcast
+    password: 123321
+    virtual-host: /
 
 #python后端相关信息
 py:
