@@ -2,6 +2,7 @@ package com.example.aipaint.controller;
 
 import com.example.aipaint.exception.NotPositiveException;
 import com.example.aipaint.exception.OverRecordSizeException;
+import com.example.aipaint.pojo.RecordVO;
 import com.example.aipaint.pojo.Result;
 import com.example.aipaint.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +34,7 @@ public class RecordController {
             @Parameter(name="pageNum",description = "第几页，从1开始"),
             @Parameter(name="pageSize",description = "页面大小")
     })
-    public Result getRecord(Integer pageNum,Integer pageSize){
+    public Result<RecordVO> getRecord(Integer pageNum, Integer pageSize){
         try {
             log.info("分页查找记录，页数:{},页面大小:{}",pageNum,pageSize);
             return Result.success(recordService.getRecord(pageNum, pageSize));
@@ -47,8 +48,13 @@ public class RecordController {
     }
     @GetMapping("/getTotal")
     @Operation(summary="获取记录的数量")
-    public Result getTotal(){
+    public Result<Integer> getTotal(){
         log.info("查找记录的接口被调用");
         return Result.success(recordService.getTotal());
+    }
+    @GetMapping("/getShared")
+    @Operation(summary = "获取分享的记录")
+    public Result<RecordVO> getShared(Integer pageNum, Integer pageSize){
+        return Result.success(recordService.getShared(pageNum,pageSize));
     }
 }

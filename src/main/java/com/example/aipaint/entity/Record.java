@@ -10,7 +10,7 @@ public class Record {
     private Integer userId;
     private Integer recordId;
     private String description;
-    private String link;
+    private Boolean shared;   //是否分享
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime localDateTime;
 }

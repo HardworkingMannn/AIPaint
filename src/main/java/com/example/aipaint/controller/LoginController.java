@@ -63,7 +63,7 @@ public class LoginController {
     }
     @GetMapping("/findPassword")
     @Operation(summary = "找回密码")
-    public Result findPassword(String username,Integer code){//找回密码
+    public Result<String> findPassword(String username,Integer code){//找回密码
         try{
             String password = loginService.findPassword(username, code);
             return Result.success(password);
@@ -77,7 +77,7 @@ public class LoginController {
     }
     @PostMapping
     @Operation(summary = "登录")
-    public Result login(@RequestBody LoginDTO loginDTO){
+    public Result<String> login(@RequestBody LoginDTO loginDTO){
         try {
             User user = loginService.checkLogin(loginDTO);
             String token = loginService.generateToken(user.getId());

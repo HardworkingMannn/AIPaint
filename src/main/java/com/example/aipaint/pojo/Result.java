@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Result {
+public class Result<T> {
     private int code;  //状态码，代表是否成功,0代表未成功，1代表成功
     private String message;    //返回信息
-    private Object result;           //结果对象
+    private T result;           //结果对象
     public static Result  success(Object o){
         return new Result(1,"success",o);
     }

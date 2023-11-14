@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.aipaint.mapper.UserMapper">
+
+    <insert id="insertRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into record(user_id,description,shared) values(#{userId},#{description},#{shared})
+    </insert>
+    <select id="getSharedRecord" resultType="com.example.aipaint.entity.Record">
+        select * from record where shared=TRUE order by time desc limit #{pageNum},#{pageSize}
+    </select>
+</mapper>
