@@ -38,7 +38,7 @@ public class TextController {
     }
     @GetMapping("/textToPic")
     @Operation(summary = "普通文本转图")
-    public Result<List<String>> textToPic(TextDTO textDTO) {//普通文本转图，返回图片链接
+    public Result<List<String>> textToPic(@RequestBody TextDTO textDTO) {//普通文本转图，返回图片链接
         String text=textDTO.getText();
         log.info("调用textToPic接口:{}",text);
         String translated=null;
@@ -72,7 +72,7 @@ public class TextController {
             @Parameter(name="weight",description = "在norm类型下代表权重，gradient类型下代表比例（0-1），前多少比例是什么，后多少比例转换成什么")
     })
     public Result<List<String>> keywordToPic(@RequestBody Keyword keyword){
-        List<KeywordDTO> keywordDTOs = keyword.getKeywords();
+        List<KeywordDTO> keywordDTOs = keyword.getKeywordsList();
         log.info("调用keywordToPic接口："+keywordDTOs.toString());
         String format=null;
         try {

@@ -15,6 +15,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -36,7 +37,7 @@ public class RemoteService {//用于远程调用py接口的service
     private RecordLinkMapper recordLinkMapper;
     @Autowired
     private HttpSession httpSession;
-    public List<String> requestForPicWithText(TextDTO textDTO) throws Exception {//请求py后端生成ai图片，返回图片链接
+    public List<String> requestForPicWithText( TextDTO textDTO) throws Exception {//请求py后端生成ai图片，返回图片链接
         URI methodURI = pyRequestConfig.getText_request_methodURI();
         HttpPost httpPost = new HttpPost(methodURI);
         //设置参数

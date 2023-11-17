@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.aipaint.mapper.LoginMapper">
     <insert id="register">
-        insert into user(username,password) values(#{username},#{password})
+        insert into user(username,name,password) values(#{username},#{name},#{password})
     </insert>
     <select id="userExist" resultType="com.example.aipaint.entity.User">
         select * from user where username=#{username}
@@ -25,6 +25,9 @@
                 and username=#{username}
             </if>
         </where>
+    </select>
+    <select id="getUserInfo" resultType="com.example.aipaint.entity.User">
+        select * from user where id=#{userId}
     </select>
     <update id="setPassword">
         update user

@@ -88,7 +88,7 @@ public class LoginService {
             log.error("{}重复注册",username);
             throw new MultipleRegistrationException();
         }
-        loginMapper.register(username,registerDTO.getPassword());
+        loginMapper.register(username, registerDTO.getName(), registerDTO.getPassword());
         log.info("{}注册成功", username);
     }
     public boolean verifyCode(String username,Integer code){

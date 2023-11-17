@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @Schema(description = "关键词集合keywords，count生成张数，shared是否分享")
 public class Keyword {
-    private List<KeywordDTO> keywords;
+    private List<KeywordDTO> keywordsList;
     private Integer count;
     private Boolean shared;
 }
